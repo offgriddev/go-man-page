@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/atomdata/man-atomdata/data"
+	"github.com/atomdata/go-man-page/data"
 )
 
 func main() {
