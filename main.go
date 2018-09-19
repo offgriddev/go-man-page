@@ -31,8 +31,9 @@ func main() {
 
 func getMainTemplate() *template.Template {
 	funcMap := template.FuncMap{
-		"ToUpper": strings.ToUpper,
-		"ToLower": strings.ToLower,
+		"ToUpper":        strings.ToUpper,
+		"ToLower":        strings.ToLower,
+		"GetIndentClass": data.GetIndentClass,
 	}
 	result := template.New("man").Funcs(funcMap)
 	const basePath = "views"

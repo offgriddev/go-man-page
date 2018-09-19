@@ -23,18 +23,10 @@ type ManPage struct {
 type Option struct {
 	Name       string
 	URL        string
+	CSS        string
+	Leader     string
 	Parameters []Parameter
 	Details    []interface{}
-}
-
-// GetIndentClass ...
-func (o *Option) GetIndentClass(d interface{}) string {
-	switch d.(type) {
-	case ListParameterDetail:
-		return "List"
-	default:
-		return "Text"
-	}
 }
 
 // Parameter defines the specifics of each option
@@ -84,6 +76,8 @@ func GetManPage() *ManPage {
 			Option{
 				"developer",
 				"",
+				"",
+				"--",
 				[]Parameter{
 					Parameter{
 						"golang",
@@ -133,12 +127,16 @@ func GetManPage() *ManPage {
 			Option{
 				"option-1",
 				"",
+				"",
+				"--",
 				nil,
 				nil,
 			},
 			Option{
 				"option-2",
 				"",
+				"",
+				"--",
 				nil,
 				nil,
 			},
@@ -149,7 +147,14 @@ func GetManPage() *ManPage {
 			"Just make it interesting. Don't bore people.",
 		},
 		[]Option{
-			Option{},
+			Option{
+				"Excellent Company",
+				"http://www.excellent.com",
+				"bottomcut",
+				"* ",
+				nil,
+				nil,
+			},
 		},
 		[]Option{
 			Option{},
@@ -159,5 +164,15 @@ func GetManPage() *ManPage {
 			ListItem{"Twitter", "https://twitter.com/atomdata", ""},
 			ListItem{"LinkedIn", "https://www.linkedin.com/in/jesse-anderson-99469349/", ""},
 		},
+	}
+}
+
+// GetIndentClass ...
+func GetIndentClass(d interface{}) string {
+	switch d.(type) {
+	case ListParameterDetail:
+		return "List"
+	default:
+		return "Text"
 	}
 }

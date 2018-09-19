@@ -12,7 +12,76 @@
           <a href="{{ .URL }}">{{ .Text }}</a><br />
         {{ end }}
    </div>
+    <!-- Templates -->
+    {{ define "Details" }}
+      {{ range .Details }}
+        {{ $detailType := GetIndentClass . }}
+          
+        {{ if eq $detailType "List" }}
+          <p class="triplesubtext">
+            {{ range .Items }}
+              {{ $urlLen := len .URL }}
+              {{ if eq $urlLen 0 }}
+                * {{ .Text }}
+              {{ end }}
+              {{ if gt $urlLen 0 }}
+                * <a href="{{ .URL }}">{{ .Text }}</a>
+              {{ end }}
 
+              {{ $descLen := len .Description }}
+              {{ if gt $descLen 0 }}
+                - {{ .Description }}
+              {{ end }}
+              <br />
+            {{ end }}
+          </p>
+        {{ end }}
+        
+        {{ if eq $detailType "Text" }}
+          <p class="doublesubtext">
+            {{ .Text }}
+          </p>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    {{ define "OptionTitle" }}
+      {{ $urlLen := len .URL }}
+      {{ if gt $urlLen 0 }}
+        <a href="{{ .URL }}">{{ .Name }}</a>
+      {{ end }}
+
+      {{ if eq $urlLen 0 }}
+        {{ .Name }}
+      {{ end }}
+    {{ end }}
+
+    {{ define "Options" }}
+
+      {{ $s := . }}
+      {{ $parameterLength := len .Parameters }}
+      {{ if gt $parameterLength 0 }}
+        {{ range .Parameters }}
+          <p class="subtext {{ $s.CSS }}">
+            {{ $s.Leader }}
+            {{ template "OptionTitle" $s }}            
+            {{ .Type }}
+          </p>
+          {{ template "Details" . }} 
+        {{ end }}
+      {{ end }}
+
+      
+      {{ if eq $parameterLength 0 }}
+        <p class="subtext {{ .CSS }}">
+          {{ .Leader }}
+          {{ template "OptionTitle" . }}
+        </p>
+        {{ template "Details" . }}
+      {{ end }}
+    {{ end }}
+
+    <!-- Main Layout -->
     <pre class="manheader">{{ .LastName | ToUpper }}({{ .Years }})                           Linux User's Manual                            {{.LastName | ToUpper}}({{.Years}})
     </pre>
     <h1>NAME</h1>
@@ -36,71 +105,25 @@
       
       {{ end }}
     </p> 
+    
     <h1>SUMMARY</h1>
     {{ range .Summary }}
       <p class="subtext">{{.}}</p>
     {{ end }}
+    
     <h1>OPTIONS</h1>
     {{ range .Synopsis }}
+      {{ template "Options" . }}
+    {{ end }}
 
-      {{ $s := . }}
-      {{ $parameterLength := len .Parameters }}
-      {{ if gt $parameterLength 0 }}
-        {{ range .Parameters }}
-          <p class="subtext">--{{ $s.Name }} {{ .Type }}</p>
-          {{ range .Details }}
-            {{ $detailType := $s.GetIndentClass . }}
-            
-            {{ if eq $detailType "List" }}
-              <p class="triplesubtext">
-                {{ range .Items }}
-                  {{ $urlLen := len .URL }}
-                  {{ if eq $urlLen 0 }}
-                    * {{ .Text }}<br />
-                  {{ end }}
-                  {{ if gt $urlLen 0 }}
-                    * <a href="{{ .URL }}">{{ .Text }}</a>
-                  {{ end }}
-                {{ end }}
-              </p>
-            {{ end }}
-            
-            {{ if eq $detailType "Text" }}
-              <p class="doublesubtext">
-                {{ .Text }}
-              </p>
-            {{ end }}
-          {{ end }}
-        {{ end }}
-      {{ end }}
+    <h1>HISTORY</h1>
+    {{ range .History }}
+      {{ template "Options" . }}
+    {{ end }}
 
-      
-      {{ if eq $parameterLength 0 }}
-        <p class="subtext">--{{ $s.Name }}</p>
-        {{ range .Details }}
-          {{ $detailType := $s.GetIndentClass . }}
-          
-          {{ if eq $detailType "List" }}
-            <p class="triplesubtext">
-              {{ range .Items }}
-                {{ $urlLen := len .URL }}
-                {{ if eq $urlLen 0 }}
-                  * {{ .Text }}<br />
-                {{ end }}
-                {{ if gt $urlLen 0 }}
-                  * <a href="{{ .URL }}">{{ .Text }}</a>
-                {{ end }}
-              {{ end }}
-            </p>
-          {{ end }}
-          
-          {{ if eq $detailType "Text" }}
-            <p class="doublesubtext">
-              {{ .Text }}
-            </p>
-          {{ end }}
-        {{ end }}
-      {{ end }}
+    <h1>SEE ALSO</h1>
+    {{ range .Additional }}
+      {{ template "Options" . }}
     {{ end }}
   </body>
 </html>
