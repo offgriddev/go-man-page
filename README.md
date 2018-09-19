@@ -1,4 +1,4 @@
-## Impress hiring teams with a custom Linux Manual page with Go.
+## Impress hiring teams with a custom Linux Manual page resume built with Go.
 
 Have you ever wanted to stand out from the crowd during an interview process and show just how much you love Linux? Have you ever wanted to display your enumerated credentials in a classic, elegant way? Then this repo is right for you. 
 
