@@ -10,29 +10,41 @@ type ManPage struct {
 	Years       int
 	Synopsis    []Option
 	Summary     []string
+	History     []Option
+	Additional  []Option
 	Links       []ListItem
 }
 
 // Option represent the command line switches of the command
+// Details takes
+// 1. ListParameterDetail for an enumerated list with items that can be
+//    plain test or a URL
+// 2. TextParameterDetail for a block of text to talk about how dope you are
 type Option struct {
 	Name       string
+	URL        string
 	Parameters []Parameter
-}
-
-// Parameter defines the specifics of each option
-type Parameter struct {
-	Type    string
-	Details []interface{}
+	Details    []interface{}
 }
 
 // GetIndentClass ...
-func (p *Parameter) GetIndentClass(d interface{}) string {
+func (o *Option) GetIndentClass(d interface{}) string {
 	switch d.(type) {
 	case ListParameterDetail:
 		return "List"
 	default:
 		return "Text"
 	}
+}
+
+// Parameter defines the specifics of each option
+// Details takes
+// 1. ListParameterDetail for an enumerated list with items that can be
+//    plain test or a URL
+// 2. TextParameterDetail for a block of text to talk about how dope you are
+type Parameter struct {
+	Type    string
+	Details []interface{}
 }
 
 // ListParameterDetail ... a wrapper for a list parameter
@@ -42,8 +54,9 @@ type ListParameterDetail struct {
 
 // ListItem ... an item in a list that can represent a URL
 type ListItem struct {
-	Text string
-	URL  string
+	Text        string
+	URL         string
+	Description string
 }
 
 // TextParameterDetail ... a text paragraph
@@ -70,53 +83,81 @@ func GetManPage() *ManPage {
 		[]Option{
 			Option{
 				"developer",
+				"",
 				[]Parameter{
+					Parameter{
+						"golang",
+						[]interface{}{
+							TextParameterDetail{
+								"Reasons you love Go and want to see more people write in Go.",
+							},
+							ListParameterDetail{
+								[]ListItem{
+									ListItem{"Text", "", "Some nice text"},
+									ListItem{"Text URL", "http://test.com", "an additional description about this item"},
+								},
+							},
+						},
+					},
 					Parameter{
 						"dotnet",
 						[]interface{}{
 							TextParameterDetail{
-								"d quam pellentesque volutpat et vel tellus. Curabitur turpis dolor, efficitur in orci sit amet, ornare mollis tortor. Sed maximus quam nunc, ut molestie lacus placerat et. ",
+								"Reasons you came to like .NET and how it led you to Go.",
 							},
 							ListParameterDetail{
 								[]ListItem{
-									ListItem{"Text", ""},
-									ListItem{"Text URL", "http://test.com"},
+									ListItem{"Text", "", ""},
+									ListItem{"Text URL", "http://test.com", ""},
 								},
 							},
 						},
 					},
 					Parameter{
 						"javascript",
-						nil,
-					},
-					Parameter{
-						"golang",
-						nil,
+						[]interface{}{
+							TextParameterDetail{
+								"Reasons why you can't stop liking JavaScript and how new front-end frameworks make it difficult to hate JavaScript.",
+							},
+							ListParameterDetail{
+								[]ListItem{
+									ListItem{"Text", "", ""},
+									ListItem{"Text URL", "http://test.com", ""},
+								},
+							},
+						},
 					},
 				},
-			},
-			Option{
-				"mentor",
 				nil,
 			},
 			Option{
-				"architect",
+				"option-1",
+				"",
+				nil,
 				nil,
 			},
 			Option{
-				"leader",
+				"option-2",
+				"",
+				nil,
 				nil,
 			},
 		},
 		[]string{
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor magna sed velit aliquet lacinia. Phasellus tincidunt libero turpis, nec commodo elit volutpat ac. Fusce non enim sed quam pellentesque volutpat et vel tellus. Curabitur turpis dolor, efficitur in orci sit amet, ornare mollis tortor. Sed maximus quam nunc, ut molestie lacus placerat et. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed nec ante eu nisi pharetra blandit sed ac ex.",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor magna sed velit aliquet lacinia. Phasellus tincidunt libero turpis, nec commodo elit volutpat ac. Fusce non enim sed quam pellentesque volutpat et vel tellus. Curabitur turpis dolor, efficitur in orci sit amet, ornare mollis tortor. Sed maximus quam nunc, ut molestie lacus placerat et. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed nec ante eu nisi pharetra blandit sed ac ex.",
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor magna sed velit aliquet lacinia. Phasellus tincidunt libero turpis, nec commodo elit volutpat ac. Fusce non enim sed quam pellentesque volutpat et vel tellus. Curabitur turpis dolor, efficitur in orci sit amet, ornare mollis tortor. Sed maximus quam nunc, ut molestie lacus placerat et. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed nec ante eu nisi pharetra blandit sed ac ex.",
+			"Tell a story about yourself. Explain how dope your skills are and the awesome things you've done.",
+			"Go ahead, make it multiple paragraphs.",
+			"Just make it interesting. Don't bore people.",
+		},
+		[]Option{
+			Option{},
+		},
+		[]Option{
+			Option{},
 		},
 		[]ListItem{
-			ListItem{"GitHub", "https://github.com/jeryanders"},
-			ListItem{"Twitter", "https://twitter.com/atomdata"},
-			ListItem{"LinkedIn", "https://www.linkedin.com/in/jesse-anderson-99469349/"},
+			ListItem{"GitHub", "https://github.com/jeryanders", ""},
+			ListItem{"Twitter", "https://twitter.com/atomdata", ""},
+			ListItem{"LinkedIn", "https://www.linkedin.com/in/jesse-anderson-99469349/", ""},
 		},
 	}
 }

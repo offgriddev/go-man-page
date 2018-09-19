@@ -1,141 +1,106 @@
 <!DOCTYPE html>
-<!-- saved from url=(0024)https://majorhayden.com/ -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>{{.FirstName}}({{.Years}}) - {{.Description}} - Linux man page</title>
-  
-  <meta name="google-site-verification" content="aObtGDw4rtVcSovbNUyoZCn1l-H9Tmqp43TXqmkWjjY">
-  <style type="text/css">
-    body {
-      font-family: monospace;
-      font-size: 12px;
-      color: #222222;
-      margin: 20px 10px 0px 20px;
-      text-align: left;
-    }
-    .manheader {
-      font-family: monospace;
-      font-size: 12px;
-      margin: 10px 0px 0px 0px;
-    }
-    h1 {
-      font-size: 12px;
-      font-weight: bold;
-      margin: 15px 0px 0px 0px;
-    }
-    .subtext {
-      margin: 0px 0px 10px 50px;
-      width: 575px;
-      word-wrap: break-word;
-    }
-    .doublesubtext {
-      margin: 0px 0px 10px 70px;
-      width: 525px;
-    }
-    .triplesubtext {
-      margin: 0px 0px 10px 90px;
-      width: 475px;
-    }
-    .bottomcut {
-      margin-bottom: 0px;
-    }
-    a, a.active, a.visited, a.hover {
-      color: #222222;
-      text-decoration: underline;
-    }
-    .footer {
-      margin: 10px 0px 20px 0px;
-      color: #CCCCCC;
-    }
-    .linkfloater {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      padding: 5px;
-      text-align: right;
-      background-color: #222222;
-      color: #FFFFFF;
-    }
-    .linkfloater a:link, .linkfloater a:visited, .linkfloater a:hover {
-      color: #00FF00;
-      text-decoration: underline;
-    }
-  </style>
-  <script async="" src="./js/analytics.js"></script><script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-1115744-9', 'auto');
-    ga('send', 'pageview');
-
-  </script>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{{ .FirstName }}({{ .Years }}) - {{ .Description }} - Linux man page</title>
+        <link rel="stylesheet" type="text/css" href="/css/site.css" />
   </head>
   <body>
     <div class="linkfloater">
-        <span>{{.LastName}}'s Links</span><hr>
-        {{range .Links}}
-          <a href="{{.URL}}">{{.Text}}</a><br />
-        {{end}}
+        <span>{{ .LastName }}'s Links</span><hr>
+        {{ range .Links }}
+          <a href="{{ .URL }}">{{ .Text }}</a><br />
+        {{ end }}
    </div>
 
-    <pre class="manheader">{{.LastName | ToUpper}}({{.Years}})                           Linux User's Manual                            {{.LastName | ToUpper}}({{.Years}})
+    <pre class="manheader">{{ .LastName | ToUpper }}({{ .Years }})                           Linux User's Manual                            {{.LastName | ToUpper}}({{.Years}})
     </pre>
     <h1>NAME</h1>
     <p class="subtext">
-      {{.FirstName}} {{.LastName}} - {{.Description | ToLower}}
+      {{ .FirstName }} {{ .LastName }} - {{ .Description | ToLower }}
     </p>
 
     <h1>SYNOPSIS</h1>
     <p class="subtext">
-      {{.LastName | ToLower}} 
+      {{ .LastName | ToLower }} 
       
-      {{range .Synopsis}}
+      {{ range .Synopsis }}
         {{ $length := len .Parameters }}
         {{ if eq $length 0 }}  
-          [--{{.Name}}]
+          [--{{ .Name }}]
         {{ end }}
 
         {{ if gt $length 0 }}
-          [--{{.Name}} {{ .JoinParams }}]
+          [--{{ .Name }} {{ .JoinParams }}]
         {{ end }}
       
-      {{end}}
+      {{ end }}
     </p> 
     <h1>SUMMARY</h1>
-    {{range .Summary}}
+    {{ range .Summary }}
       <p class="subtext">{{.}}</p>
-    {{end}}
+    {{ end }}
     <h1>OPTIONS</h1>
-    {{range .Synopsis}}
+    {{ range .Synopsis }}
+
       {{ $s := . }}
-      {{range .Parameters}}
-        <p class="subtext">--{{$s.Name}} {{.Type}}</p>
-        {{$p := .}}
-        {{range .Details}}
-          {{$detailType := $p.GetIndentClass .}}
+      {{ $parameterLength := len .Parameters }}
+      {{ if gt $parameterLength 0 }}
+        {{ range .Parameters }}
+          <p class="subtext">--{{ $s.Name }} {{ .Type }}</p>
+          {{ range .Details }}
+            {{ $detailType := $s.GetIndentClass . }}
+            
+            {{ if eq $detailType "List" }}
+              <p class="triplesubtext">
+                {{ range .Items }}
+                  {{ $urlLen := len .URL }}
+                  {{ if eq $urlLen 0 }}
+                    * {{ .Text }}<br />
+                  {{ end }}
+                  {{ if gt $urlLen 0 }}
+                    * <a href="{{ .URL }}">{{ .Text }}</a>
+                  {{ end }}
+                {{ end }}
+              </p>
+            {{ end }}
+            
+            {{ if eq $detailType "Text" }}
+              <p class="doublesubtext">
+                {{ .Text }}
+              </p>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+
+      
+      {{ if eq $parameterLength 0 }}
+        <p class="subtext">--{{ $s.Name }}</p>
+        {{ range .Details }}
+          {{ $detailType := $s.GetIndentClass . }}
           
-          {{if eq $detailType "List"}}
+          {{ if eq $detailType "List" }}
             <p class="triplesubtext">
-              {{range .Items}}
-                {{$urlLen := len .URL }}
-                {{if eq $urlLen 0}}
-                  * {{.Text}}<br />
-                {{end}}
-                {{if gt $urlLen 0}}
-                  * <a href="{{.URL}}">{{.Text}}</a>
-                {{end}}
-              {{end}}
+              {{ range .Items }}
+                {{ $urlLen := len .URL }}
+                {{ if eq $urlLen 0 }}
+                  * {{ .Text }}<br />
+                {{ end }}
+                {{ if gt $urlLen 0 }}
+                  * <a href="{{ .URL }}">{{ .Text }}</a>
+                {{ end }}
+              {{ end }}
             </p>
-          {{end}}
+          {{ end }}
           
-          {{if eq $detailType "Text"}}
+          {{ if eq $detailType "Text" }}
             <p class="doublesubtext">
-              {{.Text}}
+              {{ .Text }}
             </p>
-          {{end}}
-        {{end}}
-      {{end}}
-    {{end}}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
   </body>
 </html>
