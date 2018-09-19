@@ -67,104 +67,121 @@ func (o *Option) JoinParams() string {
 
 // GetManPage retrieves the primary help document to display on the page
 func GetManPage() *ManPage {
-	return &ManPage{
-		"atom",
-		"Data",
-		"software engineer",
-		6,
-		[]Option{
-			Option{
-				"developer",
-				"",
-				"",
-				"--",
-				[]Parameter{
-					Parameter{
-						"golang",
-						[]interface{}{
-							TextParameterDetail{
-								"Reasons you love Go and want to see more people write in Go.",
-							},
-							ListParameterDetail{
-								[]ListItem{
-									ListItem{"Text", "", "Some nice text"},
-									ListItem{"Text URL", "http://test.com", "an additional description about this item"},
-								},
-							},
+
+	manual := &ManPage{
+		FirstName:   "atom",
+		LastName:    "Data",
+		Description: "a software engineer",
+		Years:       6,
+	}
+
+	manual.Summary = []string{
+		"Tell a story about yourself. Explain how dope your skills are and the awesome things you've done.",
+		"Go ahead, make it multiple paragraphs.",
+		"Just make it interesting. Don't bore people.",
+	}
+
+	manual.Synopsis = []Option{
+		Option{
+			Name:   "developer",
+			Leader: "--",
+			Parameters: []Parameter{
+				Parameter{
+					Type: "golang",
+					Details: []interface{}{
+						TextParameterDetail{
+							"Reasons you love Go and want to see more people write in Go.",
 						},
-					},
-					Parameter{
-						"dotnet",
-						[]interface{}{
-							TextParameterDetail{
-								"Reasons you came to like .NET and how it led you to Go.",
-							},
-							ListParameterDetail{
-								[]ListItem{
-									ListItem{"Text", "", ""},
-									ListItem{"Text URL", "http://test.com", ""},
+						ListParameterDetail{
+							[]ListItem{
+								ListItem{
+									Text:        "Text",
+									Description: "Some nice text",
 								},
-							},
-						},
-					},
-					Parameter{
-						"javascript",
-						[]interface{}{
-							TextParameterDetail{
-								"Reasons why you can't stop liking JavaScript and how new front-end frameworks make it difficult to hate JavaScript.",
-							},
-							ListParameterDetail{
-								[]ListItem{
-									ListItem{"Text", "", ""},
-									ListItem{"Text URL", "http://test.com", ""},
+								ListItem{
+									Text:        "Text URL",
+									URL:         "http://test.com",
+									Description: "an additional description about this item",
 								},
 							},
 						},
 					},
 				},
-				nil,
-			},
-			Option{
-				"option-1",
-				"",
-				"",
-				"--",
-				nil,
-				nil,
-			},
-			Option{
-				"option-2",
-				"",
-				"",
-				"--",
-				nil,
-				nil,
+				Parameter{
+					Type: "dotnet",
+					Details: []interface{}{
+						TextParameterDetail{
+							"Reasons you came to like .NET and how it led you to Go.",
+						},
+						ListParameterDetail{
+							[]ListItem{
+								ListItem{
+									Text:        "Text",
+									Description: "Some nice text",
+								},
+								ListItem{
+									Text:        "Text URL",
+									URL:         "http://test.com",
+									Description: "an additional description about this item",
+								},
+							},
+						},
+					},
+				},
+				Parameter{
+					Type: "javascript",
+					Details: []interface{}{
+						TextParameterDetail{
+							"Reasons why you can't stop liking JavaScript and how new front-end frameworks make it difficult to hate JavaScript.",
+						},
+						ListParameterDetail{
+							[]ListItem{
+								ListItem{
+									Text:        "Text",
+									Description: "Some nice text",
+								},
+								ListItem{
+									Text:        "Text URL",
+									URL:         "http://test.com",
+									Description: "an additional description about this item",
+								},
+							},
+						},
+					},
+				},
 			},
 		},
-		[]string{
-			"Tell a story about yourself. Explain how dope your skills are and the awesome things you've done.",
-			"Go ahead, make it multiple paragraphs.",
-			"Just make it interesting. Don't bore people.",
+		Option{
+			Name:   "option-1",
+			Leader: "--",
 		},
-		[]Option{
-			Option{
-				"Excellent Company",
-				"http://www.excellent.com",
-				"bottomcut",
-				"* ",
-				nil,
-				nil,
-			},
-		},
-		[]Option{
-			Option{},
-		},
-		[]ListItem{
-			ListItem{"GitHub", "https://github.com/jeryanders", ""},
-			ListItem{"Twitter", "https://twitter.com/atomdata", ""},
-			ListItem{"LinkedIn", "https://www.linkedin.com/in/jesse-anderson-99469349/", ""},
+		Option{
+			Name:   "option-2",
+			Leader: "--",
 		},
 	}
+
+	manual.History =
+		[]Option{
+			Option{
+				Name:   "Excellent Company",
+				URL:    "http://www.excellent.com",
+				CSS:    "bottomcut",
+				Leader: "* ",
+			},
+		}
+
+	manual.Links = []ListItem{
+		ListItem{"GitHub", "https://github.com/jeryanders", ""},
+		ListItem{"Twitter", "https://twitter.com/atomdata", ""},
+		ListItem{"LinkedIn", "https://www.linkedin.com/in/jesse-anderson-99469349/", ""},
+	}
+
+	manual.Additional = []Option{
+		Option{},
+	}
+
+	return manual
 }
 
 // GetIndentClass ...
